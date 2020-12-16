@@ -18,7 +18,7 @@ class ReactIntlUniversal {
     this.options = {
       currentLocale: null, // Current locale such as 'en-US'
       locales: {}, // app locale data like {"en-US":{"key1":"value1"},"zh-CN":{"key1":"值1"}}
-      warningHandler: console.warn.bind(console), // ability to accumulate missing messages using third party services like Sentry
+      warningHandler: function warn(...msg) { console.warn(...msg) }, // ability to accumulate missing messages using third party services
       escapeHtml: true, // disable escape html in variable mode
       // commonLocaleDataUrls: COMMON_LOCALE_DATA_URLS,
       fallbackLocale: null, // Locale to use if a key is not found in the current locale
@@ -32,6 +32,13 @@ class ReactIntlUniversal {
    * @returns {string} message
    */
   get(key, variables) {
+    if (this.options.intlGetHook) {
+      try {
+        this.options.intlGetHook(key, this.options.currentLocale);
+      } catch (e) {
+        console.log('intl get hook error: ', e);
+      }
+    }
     invariant(key, "key is required");
     const { locales, currentLocale, formats } = this.options;
 
@@ -94,6 +101,13 @@ class ReactIntlUniversal {
    * @returns {React.Element} message
   */
   getHTML(key, variables) {
+    if (this.options.intlGetHook) {
+      try {
+        this.options.intlGetHook(key, this.options.currentLocale);
+      } catch (e) {
+        console.log('intl get hook error: ', e);
+      }
+    }
     let msg = this.get(key, variables);
     if (msg) {
       const el = React.createElement("span", {

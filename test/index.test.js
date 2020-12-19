@@ -156,7 +156,7 @@ test("Message with Time", () => {
       expires: expires
     })
   ).toBe("Coupon expires at 5:08:33 PM");
-  intl.init({ locales, currentLocale: "zh-CN" });
+  intl.init({ locales, currentLocale: "zh-CN", formats: {time: {medium: {hour12: false}}} });
   expect(
     intl.get("COUPON", {
       expires: expires
@@ -177,7 +177,7 @@ test("Message with Currency", () => {
     intl.get("SALE_PRICE", {
       price: price
     })
-  ).toBe("售价CN¥ 123,456.78");
+  ).toBe("售价CN¥123,456.78");
 });
 
 test("Message with plural", () => {
